@@ -7,11 +7,11 @@ st.write("Introduce los valores para A, B y C.")
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    a = st.number_input("Introduce el nº A", value=0.0)
+    a = st.number_input("Introduce el nº A", value=0)
 with col2:
-    b = st.number_input("Introduce el nº B", value=0.0)
+    b = st.number_input("Introduce el nº B", value=0)
 with col3:
-    c = st.number_input("Introduce el nº C", value=0.0)
+    c = st.number_input("Introduce el nº C", value=0)
 
 # 2. La lógica para decidir la LETRA
 # Comparamos para ver quién gana
@@ -38,3 +38,4 @@ else:
 
 # (Opcional) Texto pequeño abajo para confirmar valores
 st.caption(f"Valores revisados: A={a}, B={b}, C={c}")
+
