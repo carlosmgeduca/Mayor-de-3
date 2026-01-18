@@ -1,4 +1,4 @@
-mport streamlit as st
+import streamlit as st
 
 # Título de la aplicación
 st.title("Calculadora del Número Mayor")
