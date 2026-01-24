@@ -14,25 +14,33 @@ with col2:
 with col3:
     cantidad = st.number_input("Nº a mostrar:", min_value=1, value=5)
 
+# Inicializamos variables para que el diagrama no de error antes de pulsar el botón
+resultados = []
+ejecutado = False
+
 if st.button("Ejecutar Bucle"):
-    st.subheader("Resultado:")
-    
-    # Lógica del bucle
+    ejecutado = True
     numero_actual = inicio
     contador = 0
-    resultados = []
     
-    # Simulación del bucle
     while contador < cantidad:
         resultados.append(str(numero_actual))
         numero_actual += salto
         contador += 1
     
-    # Mostrar los números de forma visual
+    st.subheader("Resultado:")
     st.success(" , ".join(resultados))
 
-# Diagrama de flujo adaptativo
+st.divider()
+
+# El diagrama de flujo ahora usa lógica condicional para no fallar
 with st.expander("Ver Diagrama de Flujo"):
+    # Si no se ha pulsado el botón, mostramos "?" en lugar de valores internos
+    val_cont = cantidad if ejecutado else "?"
+    res_muestra = resultados[0] if resultados else "X"
+
+    
+
     st.code(f"""
           [ INICIO ]
               |
@@ -43,12 +51,12 @@ with st.expander("Ver Diagrama de Flujo"):
       | Cont   = 0
       +-------+-------+
               |
-    +-----> ¿Cont < Límite? (¿{contador} < {cantidad}?)
+    +-----> ¿Cont < Límite? (¿Cont < {cantidad}?)
     |         |          |
     |       ( SÍ )     ( NO ) ---> [ FIN ]
     |         |
     |   +-----V-----+
-    |   | MOSTRAR   | --> {resultados[0] if resultados else "N"}
+    |   | MOSTRAR   | --> {res_muestra}
     |   | Cont + 1  |
     |   | Ini + Salto|
     |   +-----------+
