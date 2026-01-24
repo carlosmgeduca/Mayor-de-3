@@ -4,18 +4,18 @@ st.set_page_config(page_title="Cálculo de Entradas", layout="centered")
 
 st.title("🎟️ Taquilla de Espectáculo")
 
-# Entrada de datos: Precio y Cantidad
-precio_unitario = st.number_input("Precio de una entrada (€):", min_value=0.0, value=50.0, step=1.0)
-cantidad = st.number_input("¿Cuántas entradas deseas comprar?", value=1)
+# Definimos el precio fijo
+PRECIO_ENTRADA = 100
 
-st.divider()
+# Pedimos la cantidad, usando el precio como título del input
+cantidad = st.number_input(f"Precio entrada: {PRECIO_ENTRADA} €. ¿Cuántas deseas comprar?", value=1)
 
 if st.button("Calcular Pago"):
-    # Validación (Mensaje de error)
+    # 1. Validación (Filtro de error)
     if cantidad < 1 or cantidad > 4:
-        st.error("❌ ERROR: El número de entradas debe estar entre 1 y 4.")
+        st.error("❌ Error: Solo se permite la compra de 1 a 4 entradas.")
     else:
-        # Lógica de descuentos
+        # 2. Lógica de descuentos según cantidad
         descuento = 0
         if cantidad == 2:
             descuento = 0.10
@@ -24,52 +24,33 @@ if st.button("Calcular Pago"):
         elif cantidad == 4:
             descuento = 0.20
         
-        # Cálculos
-        total_sin_dto = cantidad * precio_unitario
-        ahorro = total_sin_dto * descuento
-        pago_final = total_sin_dto - ahorro
+        # 3. Cálculo final
+        total_sin_dto = cantidad * PRECIO_ENTRADA
+        pago_final = total_sin_dto * (1 - descuento)
         
-        # Resultado simple
-        st.subheader(f"Total a pagar: {pago_final:.2f} €")
+        # 4. Resultado directo
+        st.subheader(f"Total a pagar: {pago_final:.0f} €")
         if descuento > 0:
-            st.write(f"Descuento aplicado: {int(descuento*100)}%")
+            st.write(f"(Aplicado descuento del {int(descuento*100)}%)")
 
-# Diagrama de flujo dinámico
+# Diagrama de flujo para los alumnos
 with st.expander("Ver Diagrama de Flujo"):
-    # Marcas para el diagrama
-    error = " <--- (CAMINO ACTUAL)" if cantidad < 1 or cantidad > 4 else ""
-    valido = " <--- (CAMINO ACTUAL)" if 1 <= cantidad <= 4 else ""
-    
+    error_v = " <--- RUTA ACTIVA" if cantidad < 1 or cantidad > 4 else ""
+    exito_v = " <--- RUTA ACTIVA" if 1 <= cantidad <= 4 else ""
+
     st.code(f"""
           [ INICIO ]
               |
       +-------V-------+
-      | Leer Precio   |
-      | Leer Cantidad |
+      | Leer Cantidad | ({cantidad})
       +-------+-------+
               |
       ________V________
      /                 \\
-    /  ¿Cant entre      \\
-    \\  1 y 4?           /
+    /  ¿Es Cantidad     \\
+    \\   entre 1 y 4?    /
      \\_________________/
       |               |
     ( NO )          ( SÍ )
       |               |
- [ Error ]{error}   [ Calcular Dto ]{valido}
-      |               |
-      |        _______V_______
-      |       | ¿Cant?        |
-      |       | 2 -> 10%      |
-      |       | 3 -> 15%      |
-      |       | 4 -> 20%      |
-      |       |_______________|
-      |               |
-      +-------+-------+
-              |
-      +-------V-------+
-      | Mostrar PAGO  |
-      +-------+-------+
-              |
-           [ FIN ]
-    """)
+ [ ERROR ]{error_v}
